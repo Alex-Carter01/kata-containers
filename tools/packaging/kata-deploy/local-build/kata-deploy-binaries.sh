@@ -94,6 +94,7 @@ options:
 	cc-shimv2
 	cc-virtiofsd
 	cc-ovmf
+	cc-sev-initrd-image
 EOF
 
 	exit "${return_code}"
@@ -125,6 +126,21 @@ install_cc_image() {
 	export AA_KBC="offline_fs_kbc"
 
 	"${rootfs_builder}" --imagetype=image --prefix="${cc_prefix}" --destdir="${destdir}"
+}
+
+install_cc_sev_initrd() {
+	info "Create SEV initrd with efi_secret kernel module"
+	export SKOPEO=yes
+	export UMOCI=yes
+	export AA_KBC="offline_sev_kbc"
+
+    #kernel.version: "v5.15.48"
+    #kernel.sev.tag: "efi-secret-v5.17-rc6"
+	#kernel_tag="$(yq r $versions_yaml assets.kernel.sev.tag)"
+	#placeholder="5.17.0-rc6"
+	#module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
+	
+	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
 }
 
 #Install CC kernel assert, with TEE support
@@ -211,17 +227,6 @@ install_image() {
 #Install guest initrd
 install_initrd() {
 	info "Create initrd"
-	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
-}
-
-install_cc_initrd() {
-	info "Create initrd"
-    #kernel.version: "v5.15.48"
-    #kernel.sev.tag: "efi-secret-v5.17-rc6"
-	kernel_tag="$(yq r $versions_yaml assets.kernel.sev.tag)"
-	placeholder="5.17.0-rc6"
-	module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
-	
 	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
 }
 
@@ -319,13 +324,12 @@ handle_build() {
 		install_cc_virtiofsd
 		;;
 	sev)
-		install_cc_clh
 		install_cc_sev_kernel
-		install_cc_qemu
 		install_cc_image
 		install_cc_shimv2
 		install_cc_virtiofsd
 		install_cc_ovmf
+		install_cc_sev_initrd
 		;;
 
 	cc-cloud-hypervisor) install_cc_clh ;;
@@ -343,6 +347,8 @@ handle_build() {
 	cc-tdx-qemu) install_cc_tdx_qemu ;;
 
 	cc-rootfs-image) install_cc_image ;;
+
+	cc-sev-initrd-image) install_cc_sev_initrd ;;
 
 	cc-shim-v2) install_cc_shimv2 ;;
 

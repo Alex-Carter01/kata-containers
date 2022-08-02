@@ -106,6 +106,9 @@ cc-tdx-qemu-tarball:
 cc-rootfs-image-tarball:
 	${MAKE} $@-build
 
+cc-sev-initrd-image-tarball: cc-sev-kernel-tarball
+	${MAKE} $@-build
+
 cc-shim-v2-tarball:
 	${MAKE} $@-build
 
@@ -121,7 +124,8 @@ sev-parallel: $(MK_DIR)/dockerbuild/install_yq.sh
 	${MAKE} -f $(MK_PATH) sev -j$$(( $$(nproc) - 1  )) V=
 
 sev: cc-sev-kernel-tarball \
-	cc-rootfs-image-tarball \ # needs to be initrd, and needs to have the kernel_module_dir link the kernel module
+	cc-rootfs-image-tarball \
 	cc-shim-v2-tarball \
 	cc-virtiofsd-tarball \
-	cc-ovmf-tarball
+	cc-ovmf-tarball \
+	cc-sev-initrd-image-tarball
