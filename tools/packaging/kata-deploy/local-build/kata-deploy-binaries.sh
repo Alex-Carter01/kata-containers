@@ -33,6 +33,8 @@ readonly rootfs_builder="${repo_root_dir}/tools/packaging/guest-image/build_imag
 readonly cc_prefix="/opt/confidential-containers"
 readonly qemu_cc_builder="${static_build_dir}/qemu/build-static-qemu-cc.sh"
 
+readonly ovmf_builder="${static_build_dir}/ovmf/build-ovmf.sh"
+
 ARCH=$(uname -m)
 
 workdir="${WORKDIR:-$PWD}"
@@ -85,11 +87,13 @@ options:
 	cc-cloud-hypervisor
 	cc-kernel
 	cc-tdx-kernel
+	cc-sev-kernel
 	cc-qemu
 	cc-tdx-qemu
 	cc-rootfs-image
 	cc-shimv2
 	cc-virtiofsd
+	cc-ovmf
 EOF
 
 	exit "${return_code}"
@@ -127,7 +131,7 @@ install_cc_image() {
 install_cc_tee_kernel() {
 	tee="${1}"
 
-	[ "${tee}" != "tdx" ] && die "Non supported TEE"
+	#[ "${tee}" != "tdx" ] && die "Non supported TEE"
 
 	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
 	export kernel_url="$(yq r $versions_yaml assets.kernel.${tee}.url)"
@@ -139,6 +143,16 @@ install_cc_tdx_kernel() {
 	install_cc_tee_kernel "tdx"
 }
 
+#Install CC kernel assert for AMD SEV
+install_cc_sev_kernel() {
+	install_cc_tee_kernel "sev"
+}
+
+#Install AmdSev build of OVMF Firmware
+install_cc_ovmf(){
+ 	"${ovmf_builder}"
+}
+
 #Install CC kernel asset
 install_cc_kernel() {
 	export kernel_version="$(yq r $versions_yaml assets.kernel.version)"
@@ -148,7 +162,7 @@ install_cc_kernel() {
 install_cc_tee_qemu() {
 	tee="${1}"
 
-	[ "${tee}" != "tdx" ] && die "Non supported TEE"
+	#[ "${tee}" != "tdx" ] && die "Non supported TEE"
 
 	export qemu_repo="$(yq r $versions_yaml assets.hypervisor.qemu.${tee}.url)"
 	export qemu_version="$(yq r $versions_yaml assets.hypervisor.qemu.${tee}.tag)"
@@ -197,6 +211,17 @@ install_image() {
 #Install guest initrd
 install_initrd() {
 	info "Create initrd"
+	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
+}
+
+install_cc_initrd() {
+	info "Create initrd"
+    #kernel.version: "v5.15.48"
+    #kernel.sev.tag: "efi-secret-v5.17-rc6"
+	kernel_tag="$(yq r $versions_yaml assets.kernel.sev.tag)"
+	placeholder="5.17.0-rc6"
+	module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
+	
 	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
 }
 
@@ -293,6 +318,15 @@ handle_build() {
 		install_cc_shimv2
 		install_cc_virtiofsd
 		;;
+	sev)
+		install_cc_clh
+		install_cc_sev_kernel
+		install_cc_qemu
+		install_cc_image
+		install_cc_shimv2
+		install_cc_virtiofsd
+		install_cc_ovmf
+		;;
 
 	cc-cloud-hypervisor) install_cc_clh ;;
 
@@ -301,6 +335,8 @@ handle_build() {
 	cc-kernel) install_cc_kernel ;;
 
 	cc-tdx-kernel) install_cc_tdx_kernel ;;
+
+	cc-sev-kernel) install_cc_sev_kernel ;;
 
 	cc-qemu) install_cc_qemu ;;
 
@@ -311,6 +347,8 @@ handle_build() {
 	cc-shim-v2) install_cc_shimv2 ;;
 
 	cc-virtiofsd) install_cc_virtiofsd ;;
+
+	cc-ovmf) install_cc_ovmf ;;
 
 	cloud-hypervisor) install_clh ;;
 

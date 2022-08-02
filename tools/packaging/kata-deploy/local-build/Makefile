@@ -91,6 +91,9 @@ cc-tdx-cloud-hypervisor-tarball:
 cc-kernel-tarball:
 	${MAKE} $@-build
 
+cc-sev-kernel-tarball:
+	${MAKE} $@-build
+
 cc-tdx-kernel-tarball:
 	${MAKE} $@-build
 
@@ -108,3 +111,17 @@ cc-shim-v2-tarball:
 
 cc-virtiofsd-tarball:
 	${MAKE} $@-build
+
+cc-ovmf-tarball:
+	${MAKE} $@-build
+
+sev-tarball: | sev-parallel merge-builds
+
+sev-parallel: $(MK_DIR)/dockerbuild/install_yq.sh
+	${MAKE} -f $(MK_PATH) sev -j$$(( $$(nproc) - 1  )) V=
+
+sev: cc-sev-kernel-tarball \
+	cc-rootfs-image-tarball \ # needs to be initrd, and needs to have the kernel_module_dir link the kernel module
+	cc-shim-v2-tarball \
+	cc-virtiofsd-tarball \
+	cc-ovmf-tarball
