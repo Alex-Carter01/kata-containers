@@ -37,6 +37,10 @@ RUN apt-get update && \
   apt-get install --no-install-recommends -y \
   build-essential \
   cpio \
+  uuid-dev \
+  python \
+  nasm \
+  iasl \
   gcc \
   git \
   make \
