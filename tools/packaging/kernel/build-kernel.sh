@@ -144,7 +144,7 @@ get_kernel() {
 	[ -n "${kernel_path}" ] || die "kernel_path not provided"
 	[ ! -d "${kernel_path}" ] || die "kernel_path already exist"
 
-	if [ "${conf_guest}" != "" ]; then
+	if [ "${conf_guest}" == "tdx" ]; then
 		get_tee_kernel ${version} ${kernel_path} ${conf_guest}
 		return
 	fi
@@ -255,7 +255,9 @@ get_kernel_frag_path() {
 	cd ${kernel_path}
 
 	local results
-	results=$( ${cmdpath} -r -n ${all_configs} )
+	results=$( ${cmdpath} -r -n ${all_configs})
+	echo ${results}
+	echo ${cmdpath} -r -n ${all_configs} 
 	# Only consider results highlighting "not in final"
 	results=$(grep "${not_in_string}" <<< "$results")
 	# Do not care about options that are in whitelist

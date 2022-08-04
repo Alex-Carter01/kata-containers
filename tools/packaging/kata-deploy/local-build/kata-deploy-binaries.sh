@@ -85,6 +85,7 @@ options:
 	cc-cloud-hypervisor
 	cc-kernel
 	cc-tdx-kernel
+	cc-sev-kernel
 	cc-qemu
 	cc-tdx-qemu
 	cc-rootfs-image
@@ -132,6 +133,12 @@ install_cc_tee_kernel() {
 	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
 	export kernel_url="$(yq r $versions_yaml assets.kernel.${tee}.url)"
 	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "${tee}" -v "${kernel_version}" -u "${kernel_url}"
+}
+
+#Install CC kernel assert for AMD SEV
+install_cc_sev_kernel() {
+	export kernel_version="$(yq r $versions_yaml assets.kernel.sev.tag)"
+	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "sev" -v "${kernel_version}"
 }
 
 #Install CC kernel assert for Intel TDX
@@ -301,6 +308,8 @@ handle_build() {
 	cc-kernel) install_cc_kernel ;;
 
 	cc-tdx-kernel) install_cc_tdx_kernel ;;
+
+	cc-sev-kernel) install_cc_sev_kernel ;;
 
 	cc-qemu) install_cc_qemu ;;
 

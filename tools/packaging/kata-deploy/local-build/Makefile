@@ -91,6 +91,9 @@ cc-tdx-cloud-hypervisor-tarball:
 cc-kernel-tarball:
 	${MAKE} $@-build
 
+cc-sev-kernel-tarball:
+	${MAKE} $@-build
+
 cc-tdx-kernel-tarball:
 	${MAKE} $@-build
 
