@@ -124,8 +124,7 @@ sev-parallel: $(MK_DIR)/dockerbuild/install_yq.sh
 	${MAKE} -f $(MK_PATH) sev -j$$(( $$(nproc) - 1  )) V=
 
 sev: cc-sev-kernel-tarball \
-	cc-rootfs-image-tarball \
 	cc-shim-v2-tarball \
-	cc-virtiofsd-tarball \
+	cc-qemu-tarball \
 	cc-ovmf-tarball \
 	cc-sev-initrd-image-tarball

@@ -140,7 +140,7 @@ install_cc_sev_initrd() {
 	#placeholder="5.17.0-rc6"
 	#module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
 	
-	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
+	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
 }
 
 #Install CC kernel assert, with TEE support
@@ -162,6 +162,8 @@ install_cc_tdx_kernel() {
 #Install CC kernel assert for AMD SEV
 install_cc_sev_kernel() {
 	install_cc_tee_kernel "sev"
+	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
+	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "${tee}" -v "${kernel_version}"
 }
 
 #Install AmdSev build of OVMF Firmware

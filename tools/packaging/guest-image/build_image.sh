@@ -34,6 +34,7 @@ build_initrd() {
 	# ROOTFS_BUILD_DEST is a Make variable
 	module_dir="${repo_root_dir}/tools/packaging/kata-deploy/local-build/build/cc-sev-kernel/builddir/kata-linux-efi-secret-v5.17-rc6-93/lib/modules/5.17.0-rc6"
 	info "module_dir: ${module_dir}"
+	#sudo make USE_DOCKER=yes DISTRO=ubuntu AGENT_INIT=yes DOCKER_RUNTIME=runc AA_KBC=offline_sev_kbc SKOPEO_UMOCI=yes rootfs
 	sudo -E PATH="$PATH" make rootfs ROOTFS_BUILD_DEST="${rootfs_build_dest}" KERNEL_MODULES_DIR="${module_dir}"
 	if [ -n "${INCLUDE_ROOTFS:-}" ]; then
 		sudo cp -RL --preserve=mode "${INCLUDE_ROOTFS}/." "${rootfs_build_dest}/${initrd_distro}_rootfs/"
