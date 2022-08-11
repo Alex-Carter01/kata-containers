@@ -147,7 +147,7 @@ get_kernel() {
 	[ -n "${kernel_path}" ] || die "kernel_path not provided"
 	[ ! -d "${kernel_path}" ] || die "kernel_path already exist"
 
-	if [ "${conf_guest}" != "" ]; then
+	if [ "${conf_guest}" == "tdx" ]; then
 		get_tee_kernel ${version} ${kernel_path} ${conf_guest}
 		return
 	fi

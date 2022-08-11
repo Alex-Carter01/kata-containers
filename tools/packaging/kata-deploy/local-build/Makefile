@@ -117,3 +117,23 @@ cc-tdx-td-shim-tarball:
 
 cc-tdx-tdvf-tarball:
 	${MAKE} $@-build
+
+cc-ovmf-tarball:
+	${MAKE} $@-build
+
+cc-sev-kernel-tarball:
+	${MAKE} $@-build
+
+cc-sev-initrd-image-tarball: cc-sev-kernel-tarball
+	${MAKE} $@-build
+
+sev-tarball: | sev-parallel merge-builds
+
+sev-parallel: $(MK_DIR)/dockerbuild/install_yq.sh
+	${MAKE} -f $(MK_PATH) sev -j$$(( $$(nproc) - 1  )) V=
+
+sev: cc-sev-kernel-tarball \
+	cc-shim-v2-tarball \
+	cc-qemu-tarball \
+	cc-ovmf-tarball \
+	cc-sev-initrd-image-tarball

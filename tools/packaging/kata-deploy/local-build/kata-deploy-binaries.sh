@@ -162,16 +162,24 @@ install_tdx_cc_clh() {
 install_cc_tee_kernel() {
 	tee="${1}"
 
-	[ "${tee}" != "tdx" ] && die "Non supported TEE"
+	#[ "${tee}" != "tdx" ] && die "Non supported TEE"
 
 	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
 	export kernel_url="$(yq r $versions_yaml assets.kernel.${tee}.url)"
+	echo "@@@[DEBUG] DESTDIR=${destdir} PREFIX=${cc_prefix} ${kernel_builder} -x ${tee} -v ${kernel_version} -u ${kernel_url}"
 	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "${tee}" -v "${kernel_version}" -u "${kernel_url}"
 }
 
 #Install CC kernel assert for Intel TDX
 install_cc_tdx_kernel() {
 	install_cc_tee_kernel "tdx"
+}
+
+install_cc_sev_kernel() {
+	export tee="sev"
+	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
+	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "${tee}" -v "${kernel_version}"
+
 }
 
 install_cc_tee_qemu() {
@@ -205,6 +213,11 @@ install_cc_tee_ovmf() {
 
 install_cc_tdx_tdvf() {
 	install_cc_tee_ovmf "tdx" "edk2-staging-tdx.tar.gz"
+}
+
+#Install AmdSev build of OVMF Firmware
+install_cc_ovmf(){
+ 	install_cc_tee_ovmf "sev" "edk2-sev.tar.gz"
 }
 
 #Install guest image
@@ -352,6 +365,12 @@ handle_build() {
 	shim-v2) install_shimv2 ;;
 
 	virtiofsd) install_virtiofsd ;;
+
+	cc-ovmf) install_cc_ovmf ;;
+
+	cc-sev-kernel) install_cc_sev_kernel ;;
+
+	cc-sev-initrd-image) install_cc_sev_initrd ;;
 
 	*)
 		die "Invalid build target ${build_target}"
