@@ -158,9 +158,8 @@ assets:
       tag: "SPR-BKC-PC-v9.6"
     sev:
       description: "Linux kernel with efi_secret support"
-      url: "https://github.com/confidential-containers-demo/\
-      linux/archive/refs/tags/"
-      tag: "efi-secret-v5.17-rc6"
+      #url: "https://cdn.kernel.org/pub/linux/kernel/v5.x/"
+      tag: "v5.19"
 
   kernel-experimental:
     description: "Linux kernel with virtio-fs support"
