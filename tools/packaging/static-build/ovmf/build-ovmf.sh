@@ -48,6 +48,7 @@ info "Calling edksetup script"
 source edksetup.sh
 
 if [ "${ovmf_build}" == "sev" ]; then
+		echo "@@@[DEBUG] running sev"
        info "Creating dummy grub file"
        #required for building AmdSev package without grub
        touch OvmfPkg/AmdSev/Grub/grub.efi
@@ -81,8 +82,11 @@ install_dir="${DESTDIR}/${PREFIX}/share/ovmf"
 if [ "${ovmf_build}" == "tdx" ]; then
 	install_dir="$DESTDIR/$PREFIX/share/tdvf"
 fi
+echo "@@@[DEBUG] install dir: ${install_dir}"
+echo "${DESTDIR}      ${PREFIX}     /share/ovmf"
 
 mkdir -p "${install_dir}"
+echo "@@@[DEBUG] install from: $build_root/$ovmf_dir/"${build_path_fv}"/OVMF.fd"
 install $build_root/$ovmf_dir/"${build_path_fv}"/OVMF.fd "${install_dir}"
 if [ "${ovmf_build}" == "tdx" ]; then
 	install $build_root/$ovmf_dir/"${build_path_fv}"/OVMF_CODE.fd ${install_dir}
@@ -92,6 +96,7 @@ fi
 
 local_dir=${PWD}
 pushd $DESTDIR
+echo "@@@[DEBUG] about to tar at ${local_dir}/${ovmf_dir}-${ovmf_build}.tar.gz"
 tar -czvf "${local_dir}/${ovmf_dir}-${ovmf_build}.tar.gz" "./$PREFIX"
 rm -rf $(dirname ./$PREFIX) 
 popd

@@ -173,6 +173,12 @@ install_cc_tdx_kernel() {
 	install_cc_tee_kernel "tdx"
 }
 
+install_cc_sev_kernel() {
+       install_cc_tee_kernel "sev"
+       export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
+       DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "${tee}" -v "${kernel_version}"
+}
+
 install_cc_tee_qemu() {
 	tee="${1}"
 
@@ -204,6 +210,37 @@ install_cc_tee_ovmf() {
 
 install_cc_tdx_tdvf() {
 	install_cc_tee_ovmf "tdx" "edk2-staging-tdx.tar.gz"
+}
+
+install_cc_sev_ovmf() {
+    install_cc_tee_ovmf "sev" "kata-static-ovmf.tar.gz"
+}
+
+install_cc_ovmf(){
+    #install_cc_sev_ovmf
+	new_cc_prefix="opt/confidential-containers"
+	tee="sev"
+	tarball_name="edk2-sev.tar.gz"
+
+	DESTDIR="${destdir}" PREFIX="${new_cc_prefix}" ovmf_build="${tee}" "${ovmf_builder}"
+
+	echo "@@@[DEBUG] abt to move to 2nd place ${builddir}/${tarball_name}" -C "${destdir}"
+	tar xvf "${builddir}/${tarball_name}" -C "${destdir}"
+}
+
+install_cc_sev_initrd() {
+       info "Create SEV initrd with efi_secret kernel module"
+       export SKOPEO=yes
+       export UMOCI=yes
+       export AA_KBC="offline_sev_kbc"
+ 
+     #kernel.version: "v5.15.48"
+     #kernel.sev.tag: "efi-secret-v5.17-rc6"
+       #kernel_tag="$(yq r $versions_yaml assets.kernel.sev.tag)"
+       #placeholder="5.17.0-rc6"
+       #module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
+       
+       DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
 }
 
 #Install guest image
@@ -351,6 +388,12 @@ handle_build() {
 	shim-v2) install_shimv2 ;;
 
 	virtiofsd) install_virtiofsd ;;
+
+	cc-sev-kernel) install_cc_sev_kernel ;;
+
+	cc-ovmf) install_cc_ovmf ;;
+
+	cc-sev-initrd-image) install_cc_sev_initrd ;;
 
 	*)
 		die "Invalid build target ${build_target}"
