@@ -181,6 +181,21 @@ install_cc_sev_kernel() {
 
 }
 
+install_cc_sev_initrd() {
+	info "Create SEV initrd with efi_secret kernel module"
+	export SKOPEO=yes
+	export UMOCI=yes
+	export AA_KBC="offline_sev_kbc"
+
+    #kernel.version: "v5.15.48"
+    #kernel.sev.tag: "efi-secret-v5.17-rc6"
+	#kernel_tag="$(yq r $versions_yaml assets.kernel.sev.tag)"
+	#placeholder="5.17.0-rc6"
+	#module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
+
+ 	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
+}
+
 install_cc_tee_qemu() {
 	tee="${1}"
 
