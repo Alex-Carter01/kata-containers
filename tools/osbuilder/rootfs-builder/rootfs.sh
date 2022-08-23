@@ -273,7 +273,8 @@ copy_kernel_modules()
 	mkdir -p "${dest_dir}"
 	cp -a "${KERNEL_MODULES_DIR}" "${dest_dir}/"
         local KERNEL_VER=$(ls ${dest_dir})
-        depmod -b "${dest_dir}" ${KERNEL_VER}
+		echo "KernEL Version: ${KERNEL_VER} - DESTDIR: ${dest_dir}"
+        depmod -b "${rootfs_dir}" ${KERNEL_VER}
 	OK "Kernel modules copied"
 }
 
