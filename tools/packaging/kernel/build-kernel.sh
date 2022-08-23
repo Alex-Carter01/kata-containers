@@ -35,6 +35,9 @@ readonly default_config_whitelist="${script_dir}/configs/fragments/whitelist.con
 readonly GV_INTEL="intel"
 readonly GV_NVIDIA="nvidia"
 
+readonly packaging_root_dir="$(cd "${script_dir}/../" && pwd)"
+source "${packaging_root_dir}/scripts/lib.sh"
+
 #Path to kernel directory
 kernel_path=""
 #Experimental kernel support. Pull from virtio-fs GitLab instead of kernel.org
@@ -325,21 +328,21 @@ get_default_kernel_config() {
 	echo "${config}"
 }
 
-get_config_and_patches() {
-	if [ -z "${patches_path}" ]; then
-		patches_path="${default_patches_dir}"
-	fi
-}
+#get_config_and_patches() {
+#	if [ -z "${patches_path}" ]; then
+#		patches_path="${default_patches_dir}"
+#	fi
+#}
 
-get_config_version() {
-	get_config_and_patches
-	config_version_file="${default_patches_dir}/../kata_config_version"
-	if [ -f "${config_version_file}" ]; then
-		cat "${config_version_file}"
-	else
-		die "failed to find ${config_version_file}"
-	fi
-}
+#get_config_version() {
+#	get_config_and_patches
+#	config_version_file="${default_patches_dir}/../kata_config_version"
+#	if [ -f "${config_version_file}" ]; then
+#		cat "${config_version_file}"
+#	else
+#		die "failed to find ${config_version_file}"
+#	fi
+#}
 
 setup_kernel() {
 	local kernel_path=${1:-}
