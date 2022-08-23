@@ -20,6 +20,9 @@ readonly osbuilder_dir="$(cd "${repo_root_dir}/tools/osbuilder" && pwd)"
 export GOPATH=${GOPATH:-${HOME}/go}
 source "${packaging_root_dir}/scripts/lib.sh"
 
+patches_path=""
+readonly default_patches_dir="${packaging_root_dir}/kernel/patches"
+
 arch_target="$(uname -m)"
 
 build_initrd() {
@@ -33,8 +36,19 @@ build_initrd() {
 	export AGENT_INIT="yes"
 	# ROOTFS_BUILD_DEST is a Make variable
 
-	#TODO CHANGE TO 5.19
-	module_dir="${repo_root_dir}/tools/packaging/kata-deploy/local-build/build/cc-sev-kernel/builddir/kata-linux-5.19-94/lib/modules/5.19.0"
+	#module_dir="${repo_root_dir}/tools/packaging/kata-deploy/local-build/build/cc-sev-kernel/builddir/kata-linux-5.19-94/lib/modules/5.19.0"
+
+	config_version=$(get_config_version)
+	echo "CONFIG VERSION: ${config_version}"
+
+	kernel_version="$(get_from_kata_deps "assets.kernel.sev.tag")"
+	kernel_version=${kernel_version#v}
+	echo "KERNEL VERSION: ${kernel_version}"
+
+	#note: will need a tweak for 5.19.2
+	module_dir="${repo_root_dir}/tools/packaging/kata-deploy/local-build/build/cc-sev-kernel/builddir/kata-linux-${kernel_version}-${config_version}/lib/modules/${kernel_version}.0"
+	echo "MODULE_dir= ${module_dir}"
+
 	sudo -E PATH="$PATH" make rootfs ROOTFS_BUILD_DEST="${rootfs_build_dest}" KERNEL_MODULES_DIR="${module_dir}"
 	if [ -n "${INCLUDE_ROOTFS:-}" ]; then
 		sudo cp -RL --preserve=mode "${INCLUDE_ROOTFS}/." "${rootfs_build_dest}/${initrd_distro}_rootfs/"
