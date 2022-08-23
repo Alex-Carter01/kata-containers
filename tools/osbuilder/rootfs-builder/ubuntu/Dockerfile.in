@@ -39,7 +39,8 @@ RUN apt-get update && \
     musl-tools \
     pkg-config \
     protobuf-compiler \
-    umoci
+    umoci \
+    kmod
 
 # aarch64 requires this name -- link for all
 RUN ln -s /usr/bin/musl-gcc "/usr/bin/$(uname -m)-linux-musl-gcc"
