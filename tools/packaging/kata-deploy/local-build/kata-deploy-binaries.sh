@@ -35,6 +35,12 @@ readonly rootfs_builder="${repo_root_dir}/tools/packaging/guest-image/build_imag
 readonly cc_prefix="/opt/confidential-containers"
 readonly qemu_cc_builder="${static_build_dir}/qemu/build-static-qemu-cc.sh"
 
+#readonly packaging_root_dir="$(cd "${script_dir}/../../" && pwd)"
+#source "${packaging_root_dir}/scripts/lib.sh"
+
+#patches_path=""
+#readonly default_patches_dir="${packaging_root_dir}/kernel/patches"
+
 ARCH=$(uname -m)
 
 workdir="${WORKDIR:-$PWD}"
@@ -187,14 +193,7 @@ install_cc_sev_initrd() {
 	export SKOPEO=yes
 	export UMOCI=yes
 	export AA_KBC="offline_sev_kbc"
-
-    #kernel.version: "v5.15.48"
-    #kernel.sev.tag: "efi-secret-v5.17-rc6"
-	#kernel_tag="$(yq r $versions_yaml assets.kernel.sev.tag)"
-	#placeholder="5.17.0-rc6"
-	#module_dir="nel/builddir/kata-linux-${kernel_tag}-93/lib/modules/${    }/kernel/drivers/virt/coco/efi_secret/efi_secret.ko"
-
- 	"${rootfs_builder}" --imagetype=initrd --prefix="${prefix}" --destdir="${destdir}"
+ 	"${rootfs_builder}" --imagetype=initrd --prefix="${cc_prefix}" --destdir="${destdir}"
 }
 
 install_cc_tee_qemu() {
