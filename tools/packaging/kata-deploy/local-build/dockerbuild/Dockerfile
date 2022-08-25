@@ -41,6 +41,7 @@ RUN apt-get update && \
   python \
   nasm \
   iasl \
+  kmod \
   gcc \
   git \
   make \
