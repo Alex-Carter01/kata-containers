@@ -659,6 +659,8 @@ EOF
           warning "UMOCI wasn't set, but is required for attestation, so overridden"
         fi
 
+		info "TESTING COPYING AGENT CONFIG"
+		cp "${script_dir}/agent.cfg" "${ROOTFS_DIR}/etc/default/"
 		#attestation_agent_url="$(get_package_version_from_kata_yaml externals.attestation-agent.url)"
 		attestation_agent_url="https://github.com/fitzthum/attestation-agent.git"
 		#attestation_agent_branch="$(get_package_version_from_kata_yaml externals.attestation-agent.branch)"

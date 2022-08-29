@@ -183,7 +183,7 @@ install_cc_tdx_kernel() {
 
 install_cc_sev_kernel() {
 	export tee="sev"
-	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.tag)"
+	export kernel_version="$(yq r $versions_yaml assets.kernel.${tee}.version)"
 	DESTDIR="${destdir}" PREFIX="${cc_prefix}" "${kernel_builder}" -x "${tee}" -v "${kernel_version}"
 
 }

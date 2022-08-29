@@ -37,11 +37,9 @@ build_initrd() {
 	# ROOTFS_BUILD_DEST is a Make variable
 
 	config_version=$(get_config_version)
-	kernel_version="$(get_from_kata_deps "assets.kernel.sev.tag")"
+	kernel_version="$(get_from_kata_deps "assets.kernel.sev.version")"
 	kernel_version=${kernel_version#v}
-
-	#note: will need a tweak for 5.19.2
-	module_dir="${repo_root_dir}/tools/packaging/kata-deploy/local-build/build/cc-sev-kernel/builddir/kata-linux-${kernel_version}-${config_version}/lib/modules/${kernel_version}.0"
+	module_dir="${repo_root_dir}/tools/packaging/kata-deploy/local-build/build/cc-sev-kernel/builddir/kata-linux-${kernel_version}-${config_version}/lib/modules/${kernel_version}"
 	echo "MODULE_dir= ${module_dir}"
 
 	
