@@ -90,6 +90,7 @@ options:
 	cc-qemu
 	cc-tdx-qemu
 	cc-rootfs-image
+	cc-sev-initrd-image
 	cc-shimv2
 	cc-virtiofsd
 EOF
@@ -112,13 +113,26 @@ install_cc_clh() {
 
 #Install cc capable guest image
 install_cc_image() {
+	export AA_KBC="${1}"
+	image_type="${2}"
 	export SKOPEO="${SKOPEO:-yes}"
 	export UMOCI=yes
-	export AA_KBC="offline_fs_kbc"
 	export KATA_BUILD_CC=yes
 
 	info "Create CC image configured with SKOPEO=${SKOPEO} UMOCI=${UMOCI} AA_KBC=${AA_KBC}"
-	"${rootfs_builder}" --imagetype=image --prefix="${cc_prefix}" --destdir="${destdir}"
+	"${rootfs_builder}" --imagetype="${image_type}" --prefix="${cc_prefix}" --destdir="${destdir}"
+}
+
+install_cc_generic_image() {
+	AA_KBC="offline_fs_kbc"
+	image_type="image"
+	install_cc_image "${AA_KBC}" "${image_type}"
+}
+
+install_cc_sev_image() {
+	AA_KBC="offline_sev_kbc"
+	image_type="initrd"
+	install_cc_image "${AA_KBC}" "${image_type}"
 }
 
 #Install CC kernel asset
@@ -308,7 +322,7 @@ handle_build() {
 		install_cc_clh
 		install_cc_kernel
 		install_cc_qemu
-		install_cc_image
+		install_cc_generic_image
 		install_cc_shimv2
 		install_cc_virtiofsd
 		;;
@@ -319,7 +333,9 @@ handle_build() {
 
 	cc-qemu) install_cc_qemu ;;
 
-	cc-rootfs-image) install_cc_image ;;
+	cc-rootfs-image) install_cc_generic_image ;;
+
+	cc-sev-initrd-image) install_cc_sev_image ;;
 
 	cc-shim-v2) install_cc_shimv2 ;;
 

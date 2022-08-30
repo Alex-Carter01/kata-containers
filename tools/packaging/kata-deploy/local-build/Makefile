@@ -97,6 +97,9 @@ cc-qemu-tarball:
 cc-rootfs-image-tarball:
 	${MAKE} $@-build
 
+cc-sev-initrd-image-tarball: cc-sev-kernel-tarball
+	${MAKE} $@-build
+
 cc-shim-v2-tarball:
 	${MAKE} $@-build
 
