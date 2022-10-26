@@ -669,6 +669,11 @@ EOF
 			info "Adding agent config for ${AA_KBC}"
 			AA_KBC_PARAMS="offline_sev_kbc::null" envsubst < "${script_dir}/agent-config.toml.in" | tee "${ROOTFS_DIR}/etc/agent-config.toml"
 		fi
+		if [ "${AA_KBC}" == "online_sev_kbc" ]; then
+			info "Adding agent config for ${AA_KBC}"
+			#need to get KBC address
+			AA_KBC_PARAMS="online_sev_kbc::172.16.17.43:44444" envsubst < "${script_dir}/agent-config.toml.in" | tee "${ROOTFS_DIR}/etc/agent-config.toml"
+		fi
 		attestation_agent_url="$(get_package_version_from_kata_yaml externals.attestation-agent.url)"
 		attestation_agent_branch="$(get_package_version_from_kata_yaml externals.attestation-agent.branch)"
 		info "Install attestation-agent with KBC ${AA_KBC}"
@@ -686,6 +691,7 @@ EOF
 		fi
 		export RUSTFLAGS
 		# Foreign CC is incompatible with libgit2 -- CC is still handled by `-C linker=...` flag
+		#seperately, possibly change from cargo to Makefile
 		CC= cargo build --release --target "${target}" --no-default-features --features "${AA_KBC}"
 		install -D -o root -g root -m 0755 "target/${target}/release/attestation-agent" -t "${ROOTFS_DIR}/usr/local/bin/"
 		popd
