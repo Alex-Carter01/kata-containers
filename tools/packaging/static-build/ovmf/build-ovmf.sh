@@ -79,9 +79,14 @@ popd
 
 info "Install fd to destdir"
 install_dir="${DESTDIR}/${PREFIX}/share/ovmf"
-if [ "${ovmf_build}" == "tdx" ]; then
-	install_dir="$DESTDIR/$PREFIX/share/tdvf"
-fi
+case "${ovmf_build}" in
+	"tdx")
+		install_dir="$DESTDIR/$PREFIX/share/tdvf"
+		;;
+	"x86_64")
+		install_dir="$DESTDIR/$PREFIX/share/ovmfx86_64"
+		;;
+esac
 
 mkdir -p "${install_dir}"
 install $build_root/$ovmf_dir/"${build_path_fv}"/OVMF.fd "${install_dir}"
