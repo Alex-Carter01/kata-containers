@@ -16,7 +16,7 @@ kata_static_build_scripts="${kata_static_build_dir}/scripts"
 
 git clone --depth=1 "${QEMU_REPO}" qemu
 pushd qemu
-git fetch --depth=1 origin "${QEMU_VERSION}"
+git fetch --depth=1 origin "${QEMU_BRANCH}:${QEMU_VERSION}"
 git checkout FETCH_HEAD
 scripts/git-submodule.sh update meson capstone
 ${kata_packaging_scripts}/patch_qemu.sh "${QEMU_VERSION}" "${kata_packaging_dir}/qemu/patches"

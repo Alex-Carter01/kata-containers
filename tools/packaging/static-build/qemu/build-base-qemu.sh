@@ -57,6 +57,7 @@ sudo "${container_engine}" run \
 	--env BUILD_SUFFIX="${build_suffix}" \
 	--env HYPERVISOR_NAME="${HYPERVISOR_NAME}" \
 	--env PKGVERSION="${PKGVERSION}" \
+	--env QEMU_BRANCH="${qemu_branch:-"master"}"\
 	--env QEMU_DESTDIR="${qemu_destdir}" \
 	--env QEMU_REPO="${qemu_repo}" \
 	--env QEMU_VERSION="${qemu_version}" \

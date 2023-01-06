@@ -14,6 +14,7 @@ ifeq ($(ARCH), x86_64)
 EXTRA_TARBALL=cc-cloud-hypervisor-tarball \
 	cc-tdx-kernel-tarball \
 	cc-sev-kernel-tarball \
+	cc-snp-qemu-tarball \
 	cc-tdx-qemu-tarball \
 	cc-tdx-td-shim-tarball \
 	cc-tdx-tdvf-tarball \
@@ -109,6 +110,9 @@ cc-kernel-tarball:
 	${MAKE} $@-build
 
 cc-qemu-tarball:
+	${MAKE} $@-build
+
+cc-snp-qemu-tarball:
 	${MAKE} $@-build
 
 cc-rootfs-image-tarball:

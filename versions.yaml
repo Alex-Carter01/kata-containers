@@ -105,8 +105,8 @@ assets:
       snp:
         description: "VMM that uses KVM and supports AMD SEV-SNP"
         url: "https://github.com/AMDESE/qemu"
+        tag: "ffa95097ee"
         branch: "snp-v3"
-        commit: "ffa95097ee"
 
     qemu-experimental:
       description: "QEMU with virtiofs support"
