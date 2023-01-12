@@ -15,6 +15,7 @@ shims=(
 	"qemu"
 	"qemu-tdx"
 	"qemu-sev"
+	"qemu-snp"
 	"clh"
 	"clh-tdx"
 )
