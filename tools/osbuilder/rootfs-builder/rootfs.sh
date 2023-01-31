@@ -666,13 +666,14 @@ EOF
 			#KBC URI will be specified in the config file via kernel params
 			AA_KBC_PARAMS="online_sev_kbc::123.123.123.123:44444" envsubst < "${script_dir}/agent-config.toml.in" | tee "${ROOTFS_DIR}/etc/agent-config.toml"
 		fi
-		attestation_agent_url="$(get_package_version_from_kata_yaml externals.attestation-agent.url)"
-		attestation_agent_version="$(get_package_version_from_kata_yaml externals.attestation-agent.version)"
+		#attestation_agent_url="$(get_package_version_from_kata_yaml externals.attestation-agent.url)"
+		attestation_agent_url="https://github.com/fitzthum/attestation-agent"
+		#attestation_agent_version="$(get_package_version_from_kata_yaml externals.attestation-agent.version)"
 		info "Install attestation-agent with KBC ${AA_KBC}"
 		#git clone "${attestation_agent_url}" --branch "${attestation_agent_tag}" --single-branch
-		git clone --depth=1 "${attestation_agent_url}" attestation-agent
+		git clone --depth=1 "${attestation_agent_url}" attestation-agent -b "snp-attester"
 		pushd attestation-agent/app
-		git fetch --depth=1 origin "${attestation_agent_version}"
+		git fetch --depth=1 origin #"${attestation_agent_version}"
 		git checkout FETCH_HEAD
 		source "${HOME}/.cargo/env"
 		target="${ARCH}-unknown-linux-${LIBC}"

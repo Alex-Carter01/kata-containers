@@ -281,6 +281,12 @@ install_cc_sev_image() {
 	install_cc_image "${AA_KBC}" "${image_type}" "sev"
 }
 
+install_cc_snp_image() {
+	AA_KBC="cc_kbc"
+	image_type="initrd"
+	install_cc_image "${AA_KBC}" "${image_type}" "snp"
+}
+
 install_cc_tdx_image() {
 	AA_KBC="eaa_kbc"
 	image_type="image"
@@ -611,6 +617,7 @@ handle_build() {
 		install_cc_shimv2
 		install_cc_virtiofsd
 		install_cc_sev_image
+		install_cc_snp_image
 		;;
 
 	cc-cloud-hypervisor) install_cc_clh ;;
@@ -622,6 +629,8 @@ handle_build() {
 	cc-rootfs-image) install_cc_image ;;
 
 	cc-sev-rootfs-initrd) install_cc_sev_image ;;
+
+	cc-snp-rootfs-initrd) install_cc_snp_image ;;
 
 	cc-tdx-rootfs-image) install_cc_tdx_image ;;
 

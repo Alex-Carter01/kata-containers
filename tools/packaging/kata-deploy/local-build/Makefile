@@ -19,6 +19,7 @@ EXTRA_TARBALL=cc-cloud-hypervisor-tarball \
 	cc-tdx-tdvf-tarball \
 	cc-sev-ovmf-tarball \
 	cc-sev-rootfs-initrd-tarball \
+	cc-snp-rootfs-initrd-tarball \
 	cc-tdx-rootfs-image-tarball
 endif
 
@@ -115,6 +116,9 @@ cc-rootfs-image-tarball:
 	${MAKE} $@-build
 
 cc-sev-rootfs-initrd-tarball: cc-sev-kernel-tarball
+	${MAKE} $@-build
+
+cc-snp-rootfs-initrd-tarball: #cc-sev-kernel-tarball
 	${MAKE} $@-build
 
 cc-tdx-rootfs-image-tarball:
