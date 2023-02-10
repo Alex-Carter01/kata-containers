@@ -10,13 +10,9 @@
 # XXX:   Name: @PROJECT_NAME@
 # XXX:   Type: @PROJECT_TYPE@
 
-# Basing SNP updates on this post from Joana
-# https://github.com/kata-containers/kata-containers/blob/main/docs/how-to/how-to-run-kata-containers-with-SNP-VMs.md
-
 [hypervisor.qemu]
 path = "@QEMUSNPPATH@"
 kernel = "@KERNELSEVPATH@"
-#SNP should be able to use SEV kernel and initrd with things being passed via kernel params
 initrd = "@INITRDSEVPATH@"
 machine_type = "@MACHINETYPE@"
 
@@ -108,7 +104,7 @@ cpu_features="@CPUFEATURES@"
 # < 0                             --> will be set to the actual number of physical cores
 # > 0 <= number of physical cores --> will be set to the specified number
 # > number of physical cores      --> will be set to the actual number of physical cores
-default_vcpus = 1
+#default_vcpus = 1
 
 # Default maximum number of vCPUs per SB/VM:
 # unspecified or == 0             --> will be set to the actual number of physical cores or to the maximum number
@@ -182,7 +178,7 @@ disable_block_device_use = @DEFDISABLEBLOCK@
 shared_fs = "virtio-9p"
 
 # Path to vhost-user-fs daemon.
-# virtio_fs_daemon = "@DEFVIRTIOFSDAEMON@"
+virtio_fs_daemon = "@DEFVIRTIOFSDAEMON@"
 
 # List of valid annotations values for the virtiofs daemon
 # The default if not set is empty (all annotations rejected.)
@@ -289,7 +285,7 @@ valid_vhost_user_store_paths = @DEFVALIDVHOSTUSERSTOREPATHS@
 # will disable this feature. In the case of virtio-fs, this is enabled
 # automatically and '/dev/shm' is used as the backing folder.
 # This option will be ignored if VM templating is enabled.
-file_mem_backend = "@DEFFILEMEMBACKEND@"
+#file_mem_backend = "@DEFFILEMEMBACKEND@"
 
 # List of valid annotations values for the file_mem_backend annotation
 # The default if not set is empty (all annotations rejected.)
@@ -322,7 +318,7 @@ disable_nesting_checks = true
 # nvdimm is not supported when `confidential_guest = true`.
 #
 # Default is false
-disable_image_nvdimm = true
+#disable_image_nvdimm = true
 
 # VFIO devices are hotplugged on a bridge by default.
 # Enable hotplugging on root bus. This may be required for devices with
@@ -421,14 +417,14 @@ valid_entropy_sources = @DEFVALIDENTROPYSOURCES@
 #use_legacy_serial = true
 
 # disable applying SELinux on the VMM process (default false)
-disable_selinux=@DEFDISABLESELINUX@
+#disable_selinux=@DEFDISABLESELINUX@
 
 # disable applying SELinux on the container process
 # If set to false, the type `container_t` is applied to the container process by default.
 # Note: To enable guest SELinux, the guest rootfs must be CentOS that is created and built
 # with `SELINUX=yes`.
 # (default: true)
-disable_guest_selinux=@DEFDISABLEGUESTSELINUX@
+#disable_guest_selinux=@DEFDISABLEGUESTSELINUX@
 
 [factory]
 # VM templating support. Once enabled, new VMs are created from template

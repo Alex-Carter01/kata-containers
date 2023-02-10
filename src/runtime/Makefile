@@ -269,7 +269,7 @@ DEFSEVGUESTPOLICY ?= 0
 DEFSNPGUEST ?= true
 # Based on SEV Secure Nested Paging Firmware ABI Specification section 4.3
 # unspecified or == 0 --> 0x30000 i.e. Bit#17 is '1' and Bit#16 is '1' (SMT is allowed)
-DEFSNPGUESTPOLICY ?= 0x30000
+DEFSNPGUESTPOLICY ?= 0xB0000
 
 SED = sed
 
