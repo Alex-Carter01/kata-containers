@@ -118,7 +118,7 @@ cc-qemu-tarball:
 cc-rootfs-image-tarball:
 	${MAKE} $@-build
 
-cc-sev-rootfs-initrd-tarball: cc-sev-kernel-tarball
+cc-sev-rootfs-initrd-tarball: #cc-sev-kernel-tarball
 	${MAKE} $@-build
 
 cc-tdx-rootfs-image-tarball:

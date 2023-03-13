@@ -398,14 +398,14 @@ install_cc_tee_kernel() {
 
 	export kernel_version=${kernel_version}
 
-	install_cached_component \
-		"kernel" \
-		"${jenkins_url}/job/kata-containers-2.0-kernel-${tee}-cc-$(uname -m)/${cached_artifacts_path}" \
-		"${kernel_version}" \
-		"$(get_kernel_image_name)" \
-		"${final_tarball_name}" \
-		"${final_tarball_path}" \
-		&& return 0
+	#install_cached_component \
+	#	"kernel" \
+	#	"${jenkins_url}/job/kata-containers-2.0-kernel-${tee}-cc-$(uname -m)/${cached_artifacts_path}" \
+	#	"${kernel_version}" \
+	#	"$(get_kernel_image_name)" \
+	#	"${final_tarball_name}" \
+	#	"${final_tarball_path}" \
+	#	&& return 0
 
 	info "build initramfs for TEE kernel"
 	"${initramfs_builder}"
