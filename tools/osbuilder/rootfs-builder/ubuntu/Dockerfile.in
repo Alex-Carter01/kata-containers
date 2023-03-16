@@ -41,7 +41,16 @@ RUN apt-get update && \
     protobuf-compiler \
     gettext-base \
     umoci \ 
-    kmod
+    kmod \
+    wget
+
+#RUN wget "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/openssl_3.0.2.orig.tar.gz"
+#RUN tar -xzf openssl_3.0.2.orig.tar.gz
+#WORKDIR openssl-3.0.2
+#RUN ./Configure
+#RUN make
+#RUN make install
+#RUN export OPENSSL_DIR=/usr/local/ssl
 
 # aarch64 requires this name -- link for all
 RUN ln -s /usr/bin/musl-gcc "/usr/bin/$(uname -m)-linux-musl-gcc"

@@ -685,6 +685,7 @@ EOF
 			RUSTFLAGS+=" -C linker=$CC"
 		fi
 		export RUSTFLAGS
+		target="x86_64-unknown-linux-gnu"
 		# Foreign CC is incompatible with libgit2 -- CC is still handled by `-C linker=...` flag
 		# AA_KBC=cc_kbc: tdx-attest-sys build fails unless a value is provided for SGX_SDK
 		CC= SGX_SDK= cargo build --release --target "${target}" --no-default-features --features "${AA_KBC}"
