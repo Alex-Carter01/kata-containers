@@ -664,7 +664,7 @@ EOF
 			info "Adding agent config for ${AA_KBC}"
 			#KBC URI will be specified in the config file via kernel params
 			AA_KBC_PARAMS="online_sev_kbc::123.123.123.123:44444" envsubst < "${script_dir}/agent-config.toml.in" | tee "${ROOTFS_DIR}/etc/agent-config.toml"
-			AA_KBC="cc_kbc online_sev_kbc"
+			AA_KBC="cc_kbc,online_sev_kbc"
 		fi
 		attestation_agent_url="$(get_package_version_from_kata_yaml externals.attestation-agent.url)"
 		attestation_agent_version="$(get_package_version_from_kata_yaml externals.attestation-agent.version)"
@@ -686,10 +686,16 @@ EOF
 		fi
 		export RUSTFLAGS
 		target="x86_64-unknown-linux-gnu"
+
 		# Foreign CC is incompatible with libgit2 -- CC is still handled by `-C linker=...` flag
 		# AA_KBC=cc_kbc: tdx-attest-sys build fails unless a value is provided for SGX_SDK
-		CC= SGX_SDK= cargo build --release --target "${target}" --no-default-features --features "${AA_KBC}"
-		install -D -o root -g root -m 0755 "target/${target}/release/attestation-agent" -t "${ROOTFS_DIR}/usr/local/bin/"
+
+        #here add a feature for openssl
+		#CC= SGX_SDK= cargo build --release --target "${target}" --no-default-features --features "${AA_KBC}, openssl"
+        CC= SGX_SDK= cargo build --release --target "${target}" --no-default-features --features cc_kbc,online_sev_kbc,openssl,grpc
+		#CC= SGX_SDK= make KBC="cc_kbc"
+        #make install
+        install -D -o root -g root -m 0755 "target/${target}/release/attestation-agent" -t "${ROOTFS_DIR}/usr/local/bin/"
 		popd
 	fi
 

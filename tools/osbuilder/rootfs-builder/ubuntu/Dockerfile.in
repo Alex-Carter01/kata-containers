@@ -45,9 +45,13 @@ RUN apt-get update && \
     wget
 
 #RUN wget "http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/openssl_3.0.2.orig.tar.gz"
+#RUN wget https://www.openssl.org/source/openssl-1.1.1k.tar.gz
 #RUN tar -xzf openssl_3.0.2.orig.tar.gz
+#RUN tar -xzf openssl-1.1.1k.tar.gz
 #WORKDIR openssl-3.0.2
-#RUN ./Configure
+#WORKDIR openssl-1.1.1k
+#RUN ./Configure 
+#RUN ./config --prefix=/usr/local/ssl --openssldir=/usr/local/ssl shared zlib
 #RUN make
 #RUN make install
 #RUN export OPENSSL_DIR=/usr/local/ssl
